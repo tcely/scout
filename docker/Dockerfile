@@ -2,6 +2,7 @@ FROM ghcr.io/astral-sh/uv:0.7 AS uv-base
 
 FROM python:3.12-alpine3.21 AS scout
 ENV SCOUT_DATABASE=/data/search-index.db
+ARG RUST_LOG
 COPY ./server /srv/
 
 # Install Python deps and ensure peewee C extensions are compiled.
