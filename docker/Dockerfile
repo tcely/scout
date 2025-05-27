@@ -2,7 +2,10 @@ FROM ghcr.io/astral-sh/uv:0.7 AS uv-base
 
 FROM python:3.12-alpine3.21 AS scout
 ENV SCOUT_DATABASE=/data/search-index.db
-RUN apk add --no-cache sqlite-libs
+RUN \
+    --mount=type=cache,sharing=locked,id=apk-cache,target=/etc/apk/cache \
+    apk add --update-cache sqlite-libs
+
 COPY ./server /srv/
 ARG RUST_LOG UV_LOG_CONTEXT \
     UV_NO_BINARY=1 UV_NO_CACHE=0 UV_NO_PROGRESS=1
@@ -13,7 +16,7 @@ RUN \
     --mount=type=cache,sharing=locked,id=apk-cache,target=/etc/apk/cache \
     --mount=type=cache,sharing=locked,id=uv-cache,target=/cache/uv \
     --mount=type=bind,from=uv-base,source=/uv,target=/usr/local/bin/uv \
-    apk add --no-cache --virtual .build-deps \
+    apk add --update-cache --virtual .build-deps \
         build-base c-ares-dev libev-dev libuv-dev sqlite-dev \
     && \
     UV_BREAK_SYSTEM_PACKAGES=1 \
