@@ -24,8 +24,8 @@ RUN \
     UV_COMPILE_BYTECODE=1 UV_LINK_MODE='copy' \
     UV_NO_CONFIG=1 UV_NO_MANAGED_PYTHON=1 \
     UV_SYSTEM_PYTHON=1 \
-    uv pip install --strict \
-        cython gevent scout \
+    uv pip install \
+        'gunicorn[gevent]' scout \
     && \
     apk del --cache-max-age 360 --purge .build-deps
     
