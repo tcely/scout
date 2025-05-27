@@ -1,7 +1,7 @@
 FROM ghcr.io/astral-sh/uv:0.7 AS uv-base
 
 FROM python:3.12-alpine3.21 AS scout
-RUN apk add --no-cache sqlite
+#RUN apk add --no-cache sqlite
 ENV SCOUT_DATABASE=/data/search-index.db
 COPY ./server /srv/
 
@@ -10,7 +10,7 @@ RUN \
     --mount=type=bind,from=uv-base,source=/uv,target=/usr/local/bin/uv \
     apk add --no-cache \
         --virtual .build-deps \
-        build-base sqlite-dev \
+        build-base \
     && \
     UV_BREAK_SYSTEM_PACKAGES=1 \
     UV_COMPILE_BYTECODE=1 UV_LINK_MODE='copy' \
