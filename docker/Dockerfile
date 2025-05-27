@@ -14,7 +14,7 @@ RUN \
         --virtual .build-deps \
         build-base libev-dev python3-dev sqlite-dev \
     && \
-    UV_BREAK_SYSTEM_PACKAGES=0 \
+    UV_BREAK_SYSTEM_PACKAGES=1 \
     UV_COMPILE_BYTECODE=1 UV_LINK_MODE='copy' \
     UV_NO_CACHE=1 UV_NO_CONFIG=1 UV_NO_MANAGED_PYTHON=1 \
     UV_NO_PROGRESS=1 UV_SYSTEM_PYTHON=1 \
