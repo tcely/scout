@@ -4,18 +4,22 @@ FROM python:3.12-alpine3.21 AS scout
 ENV SCOUT_DATABASE=/data/search-index.db
 RUN apk add --no-cache sqlite-libs
 COPY ./server /srv/
-ARG RUST_LOG UV_LOG_CONTEXT UV_NO_BINARY=1 UV_NO_PROGRESS=1
+ARG RUST_LOG UV_LOG_CONTEXT \
+    UV_NO_BINARY=1 UV_NO_CACHE=0 UV_NO_PROGRESS=1
 
 # Install Python deps and ensure peewee C extensions are compiled.
 RUN \
+    --mount=type=tmpfs,target=/cache \
+    --mount=type=cache,sharing=locked,id=uv-cache,target=/cache/uv \
     --mount=type=bind,from=uv-base,source=/uv,target=/usr/local/bin/uv \
     apk add --no-cache --virtual .build-deps \
         build-base c-ares-dev libev-dev libuv-dev sqlite-dev \
     && \
     UV_BREAK_SYSTEM_PACKAGES=1 \
+    UV_CACHE_DIR=/cache/uv \
     UV_COMPILE_BYTECODE=1 UV_LINK_MODE='copy' \
-    UV_NO_CACHE=1 UV_NO_CONFIG=1 \
-    UV_NO_MANAGED_PYTHON=1 UV_SYSTEM_PYTHON=1 \
+    UV_NO_CONFIG=1 UV_NO_MANAGED_PYTHON=1 \
+    UV_SYSTEM_PYTHON=1 \
     uv pip install --strict \
         cython gevent scout \
     && \
