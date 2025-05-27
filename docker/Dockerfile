@@ -4,7 +4,7 @@ FROM python:3.12-alpine3.21 AS scout
 ENV SCOUT_DATABASE=/data/search-index.db
 RUN \
     --mount=type=cache,sharing=locked,id=apk-cache,target=/etc/apk/cache \
-    apk add --update-cache sqlite-libs
+    apk add --cache-max-age 360 sqlite-libs
 
 COPY ./server /srv/
 ARG RUST_LOG UV_LOG_CONTEXT \
@@ -16,7 +16,7 @@ RUN \
     --mount=type=cache,sharing=locked,id=apk-cache,target=/etc/apk/cache \
     --mount=type=cache,sharing=locked,id=uv-cache,target=/cache/uv \
     --mount=type=bind,from=uv-base,source=/uv,target=/usr/local/bin/uv \
-    apk add --update-cache --virtual .build-deps \
+    apk add --cache-max-age 360 --virtual .build-deps \
         build-base c-ares-dev libev-dev libuv-dev sqlite-dev \
     && \
     UV_BREAK_SYSTEM_PACKAGES=1 \
@@ -27,7 +27,7 @@ RUN \
     uv pip install --strict \
         cython gevent scout \
     && \
-    apk del --no-cache --purge .build-deps
+    apk del --cache-max-age 360 --purge .build-deps
     
 EXPOSE 9004
 VOLUME /data/
