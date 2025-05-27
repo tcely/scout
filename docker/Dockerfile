@@ -1,15 +1,13 @@
 FROM ghcr.io/astral-sh/uv:0.7 AS uv-base
 
-FROM alpine:3.21
+FROM python:3.12-alpine3.21 AS scout
+RUN apk add --no-cache libev sqlite
 ENV SCOUT_DATABASE=/data/search-index.db
 COPY ./server /srv/
 
 # Install Python deps and ensure peewee C extensions are compiled.
 RUN \
     --mount=type=bind,from=uv-base,source=/uv,target=/usr/local/bin/uv \
-    apk add --no-cache \
-        libev python3 sqlite \
-    && \
     apk add --no-cache \
         --virtual .build-deps \
         build-base libev-dev python3-dev sqlite-dev \
