@@ -10,6 +10,7 @@ ARG RUST_LOG UV_LOG_CONTEXT \
 # Install Python deps and ensure peewee C extensions are compiled.
 RUN \
     --mount=type=tmpfs,target=/cache \
+    --mount=type=cache,sharing=locked,id=apk-cache,target=/etc/apk/cache \
     --mount=type=cache,sharing=locked,id=uv-cache,target=/cache/uv \
     --mount=type=bind,from=uv-base,source=/uv,target=/usr/local/bin/uv \
     apk add --no-cache --virtual .build-deps \
