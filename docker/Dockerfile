@@ -10,7 +10,7 @@ RUN \
     --mount=type=bind,from=uv-base,source=/uv,target=/usr/local/bin/uv \
     apk add --no-cache \
         --virtual .build-deps \
-        build-base libev-dev python3-dev sqlite-dev \
+        build-base libev-dev sqlite-dev \
     && \
     UV_BREAK_SYSTEM_PACKAGES=1 \
     UV_COMPILE_BYTECODE=1 UV_LINK_MODE='copy' \
