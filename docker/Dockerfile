@@ -4,7 +4,7 @@ FROM python:3.12-alpine3.21 AS scout
 ENV SCOUT_DATABASE=/data/search-index.db
 RUN apk add --no-cache sqlite-libs
 COPY ./server /srv/
-ARG RUST_LOG UV_NO_BINARY=1 UV_NO_PROGRESS=1
+ARG RUST_LOG UV_LOG_CONTEXT UV_NO_BINARY=1 UV_NO_PROGRESS=1
 
 # Install Python deps and ensure peewee C extensions are compiled.
 RUN \
